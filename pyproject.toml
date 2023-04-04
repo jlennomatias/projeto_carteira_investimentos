@@ -1,0 +1,24 @@
+[tool.poetry]
+name = "carteira-investimentos"
+version = "0.1.0"
+description = ""
+authors = ["jlennomatias <john.x12@hotmail.com>"]
+readme = "README.md"
+packages = [{include = "carteira_investimentos"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = "^0.95.0"
+sqlalchemy = "^2.0.8"
+aiosqlite = "^0.18.0"
+alembic = "^1.10.2"
+uvicorn = "^0.21.1"
+asyncio = "^3.4.3"
+python-multipart = "^0.0.6"
+python-jose = "^3.3.0"
+passlib = "^1.7.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
