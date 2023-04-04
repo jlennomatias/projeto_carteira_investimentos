@@ -18,7 +18,6 @@ class CarteiraService:
 
     async def create_carteira(carteira: CarteiraCreate):
         async with async_session() as session:
-            print(f"imprimindo como está a carteira, dentro da function create_carteira {carteira}")
             carteira = Carteira(
                 id=str(uuid4()),
                 patrimonio=carteira.patrimonio,
@@ -26,7 +25,6 @@ class CarteiraService:
                 user_id=carteira.user_id
             )
             try:
-                print(f"imprimindo a carteira antes do add {carteira}")
                 session.add(carteira)
                 await session.commit()
                 return carteira

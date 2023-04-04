@@ -19,7 +19,6 @@ async def get_carteira():
 @router.post('/carteira', response_model=CarteiraCreate)
 async def create_carteira(carteira: CarteiraCreate):
     try:
-        print(f"Imprimindo a carteira do routes, que será criada {carteira}")
         carteira = await CarteiraService.create_carteira(carteira=carteira)
         return carteira
     except Exception as error:

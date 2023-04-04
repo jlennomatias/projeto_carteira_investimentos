@@ -3,6 +3,33 @@ from typing import Optional, List
 from pydantic import BaseModel
 
 
+class OperacaoCreate(BaseModel):
+    codigo_ativo: str
+    tipo_operacao: Optional[str]
+    valor_operacao: Optional[float]
+    quantidade_ativo: Optional[int]
+    data_operacao: Optional[datetime.date]
+
+    carteira_id: str
+
+    class Config:
+        orm_mode = True
+
+
+class OperacaoView(BaseModel):
+    id: str
+    codigo_ativo: str
+    tipo_operacao: Optional[str]
+    valor_operacao: Optional[float]
+    quantidade_ativo: Optional[int]
+    data_operacao: Optional[datetime.date]
+
+    carteira_id: str
+
+    class Config:
+        orm_mode = True
+
+
 class CarteiraCreate(BaseModel):
     patrimonio: float
     total_investido: float
@@ -17,6 +44,16 @@ class CarteiraView(BaseModel):
     patrimonio: float
     total_investido: float
     user_id: str
+
+    operacao: Optional[List[OperacaoView]]
+
+    class Config:
+        orm_mode = True
+
+
+class CarteiraViewUser(BaseModel):
+    patrimonio: float
+    total_investido: float
 
     class Config:
         orm_mode = True
@@ -41,7 +78,7 @@ class UserCreate(BaseModel):
 class UserView(BaseModel):
     id: str
     nome: str
-    carteira: Optional[List[CarteiraView]]
+    carteira: Optional[List[CarteiraViewUser]]
 
     class Config:
         orm_mode = True

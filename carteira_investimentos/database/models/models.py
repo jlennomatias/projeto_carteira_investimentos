@@ -23,3 +23,17 @@ class Carteira(Base):
     total_investido = Column(Float)
 
     user_id = Column(String, ForeignKey('user.id'))
+    operacao = relationship('Operacao', backref='carteira', lazy='subquery')
+
+
+class Operacao(Base):
+    __tablename__ = "operacao"
+    
+    id = Column(String, primary_key=True, index=True)
+    codigo_ativo = Column(String)
+    tipo_operacao = Column(String)
+    valor_operacao = Column(Float)
+    quantidade_ativo = Column(Integer)
+    data_operacao = Column(DateTime, default=datetime.datetime.utcnow)
+
+    carteira_id = Column(String, ForeignKey('carteira.id'))
