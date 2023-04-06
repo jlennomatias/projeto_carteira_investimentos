@@ -13,8 +13,13 @@ router = APIRouter(tags=["Operacao"])
 
 @router.get('/operacao', response_model=List[OperacaoView])
 async def get_operacao():
-    operacao = await OperacaoService.select_operacao()
-    return operacao
+    try:
+        operacao = await OperacaoService.select_operacao()
+        if not operacao:
+            raise HTTPException(status_code=404, detail="Item not found")
+        return operacao
+    except Exception as error:
+        raise error
 
 
 @router.post('/operacao', response_model=OperacaoCreate)
