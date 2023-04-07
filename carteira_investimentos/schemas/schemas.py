@@ -30,10 +30,32 @@ class OperacaoView(BaseModel):
         orm_mode = True
 
 
+class AtivosCarteiraCreate(BaseModel):
+    codigo_ativo: str = None
+    preco_medio: float = 0.0
+    quantidade_ativo: int = 0
+    preco_atual: float = 0.0
+    status_em_carteira: int = 0
+
+    class Config:
+        orm_mode = True
+
+
+class AtivosCarteiraView(BaseModel):
+    id: str
+    codigo_ativo: str = None
+    preco_medio: float = 0.0
+    quantidade_ativo: int = 0
+    preco_atual: float = 0.0
+    status_em_carteira: int = 0
+
+    class Config:
+        orm_mode = True
+
+
 class CarteiraCreate(BaseModel):
-    patrimonio: float
-    total_investido: float
-    user_id: str
+    patrimonio: float = 0.0
+    total_investido: float = 0.0
 
     class Config:
         orm_mode = True
@@ -45,6 +67,7 @@ class CarteiraView(BaseModel):
     total_investido: float
     user_id: str
 
+    ativos_carteira: Optional[List[AtivosCarteiraView]]
     operacao: Optional[List[OperacaoView]]
 
     class Config:
@@ -78,7 +101,7 @@ class UserCreate(BaseModel):
 class UserView(BaseModel):
     id: str
     nome: str
-    carteira: Optional[List[CarteiraViewUser]]
+    carteira: Optional[List[CarteiraView]]
 
     class Config:
         orm_mode = True

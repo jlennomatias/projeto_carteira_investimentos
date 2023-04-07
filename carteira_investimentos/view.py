@@ -5,7 +5,8 @@ from carteira_investimentos.routers import (
     carteira_routers,
     user_routers,
     operacao_routers,
-    assets_router
+    assets_router,
+    ativos_routers
 )
 
 
@@ -24,3 +25,5 @@ app.include_router(user_routers.router)
 app.include_router(carteira_routers.router)
 app.include_router(operacao_routers.router)
 app.include_router(assets_router.router)
+app.include_router(ativos_routers.router)
+

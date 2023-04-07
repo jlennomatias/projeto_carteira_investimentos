@@ -17,9 +17,9 @@ async def get_carteira():
 
 
 @router.post('/carteira', response_model=CarteiraCreate)
-async def create_carteira(carteira: CarteiraCreate):
+async def create_carteira(carteira: CarteiraCreate, user_id: str):
     try:
-        carteira = await CarteiraService.create_carteira(carteira=carteira)
+        carteira = await CarteiraService.create_carteira(carteira=carteira, user_id=user_id)
         return carteira
     except Exception as error:
         raise HTTPException(400, detail=str(error))

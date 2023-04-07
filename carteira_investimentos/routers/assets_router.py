@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter
 
 from carteira_investimentos.controllers.utils.assets import AssetService
 from carteira_investimentos.schemas.ativo_schemas import AtivoView

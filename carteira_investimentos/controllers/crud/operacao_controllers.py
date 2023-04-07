@@ -65,4 +65,4 @@ class OperacaoService:
             results = operacao_list.scalars().one()
             await session.execute(delete(Operacao).where(Operacao.id == id_operacao))
             await session.commit()
-            return {'msg': f'Operacao {results.codigo_operacao} foi removido'}
+            return {'msg': f'Operacao {results.codigo_ativo} foi removido'}

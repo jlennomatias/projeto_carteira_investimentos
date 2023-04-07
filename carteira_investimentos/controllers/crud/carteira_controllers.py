@@ -6,8 +6,8 @@ from sqlalchemy.exc import IntegrityError
 
 from carteira_investimentos.database.models.models import Carteira
 from carteira_investimentos.database.config import async_session
-from carteira_investimentos.schemas.schemas import CarteiraCreate
-from carteira_investimentos.controllers.crud.operacao_controllers import OperacaoService
+from carteira_investimentos.schemas.schemas import CarteiraCreate, AtivosCarteiraCreate
+from carteira_investimentos.controllers.crud.ativos_carteira_controllers import AtivosCarteiraService
 from carteira_investimentos.controllers.utils.carteira_utils import CarteiraUtils
 
 
@@ -19,18 +19,20 @@ class CarteiraService:
             carteira_result = carteira_result.scalars().all()
             return carteira_result
 
-    async def create_carteira(carteira: CarteiraCreate):
+    async def create_carteira(user_id: str, carteira: CarteiraCreate):
         async with async_session() as session:
-            carteira = Carteira(
+            carteira_create = Carteira(
                 id=str(uuid4()),
                 patrimonio=carteira.patrimonio,
                 total_investido=carteira.total_investido,
-                user_id=carteira.user_id
+                user_id=user_id
             )
+            print(f"Criando a carteira de id: {carteira_create.id}")
             try:
-                session.add(carteira)
+                session.add(carteira_create)
                 await session.commit()
-                return carteira
+                await AtivosCarteiraService.create_ativos_carteira(id_carteira=carteira_create.id, ativos_carteira=AtivosCarteiraCreate())
+                return carteira_create
             except IntegrityError:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
@@ -41,9 +43,8 @@ class CarteiraService:
         async with async_session() as session:
             carteira_list = await session.execute(select(Carteira).where(Carteira.id == id_carteira))
             carteira_result = carteira_list.scalars().first()
-            print(f"imprimindo {type(carteira_result)}")
             carteira_result.total_investido = await CarteiraUtils.calc_total_investido(carteira_result.total_investido)
-            
+            print(dir(carteira_result))
             return carteira_result
         
 

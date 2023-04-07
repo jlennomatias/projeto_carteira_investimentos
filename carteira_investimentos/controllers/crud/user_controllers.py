@@ -7,8 +7,9 @@ from sqlalchemy.exc import IntegrityError
 from carteira_investimentos.controllers.security.auth import create_password
 from carteira_investimentos.database.models.models import User
 from carteira_investimentos.database.config import async_session
-from carteira_investimentos.schemas.schemas import UserCreate
+from carteira_investimentos.schemas.schemas import UserCreate, CarteiraCreate
 from carteira_investimentos.controllers.crud.carteira_controllers import CarteiraService
+
 
 class UserService:
 
@@ -26,9 +27,11 @@ class UserService:
                 nome=user.nome,
                 senha=create_password(user.senha)
             )
+            print(f"Criando o ususario: {user.nome}")
             try:
                 session.add(user)
                 await session.commit()
+                await CarteiraService.create_carteira(user_id=user.id, carteira=CarteiraCreate())
                 return user
             except IntegrityError:
                 raise HTTPException(
