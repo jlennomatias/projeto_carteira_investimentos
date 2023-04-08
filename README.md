@@ -1,9 +1,10 @@
-App CarteiraInvestimentos
+# App CarteiraInvestimentos
 app para controle de ativos
 
-Functionalidades:
+## Functionalidades
     . Qualquer pessoa poderá acompanhar o preço atual dos ativos
     . Qualquer pessoa poderá cadastrar as compras e vendas dos ativos
+    
     . Usuario:
         . atributos:
             . username
@@ -46,7 +47,7 @@ Functionalidades:
         . valor do ativo com o desconto do dividendos
 
 
-Dependencias:
+## Dependencias:
     . Python + FastAPI
     . Será uma API REST
     . Banco de dados: Postgresql
