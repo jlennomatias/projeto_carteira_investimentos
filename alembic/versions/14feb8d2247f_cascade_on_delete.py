@@ -1,8 +1,8 @@
-"""correcao Foreignkey
+"""Cascade on delete
 
-Revision ID: 80e03079ab82
+Revision ID: 14feb8d2247f
 Revises: b7bdf8195320
-Create Date: 2023-04-07 08:07:25.352737
+Create Date: 2023-04-08 11:15:42.631712
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '80e03079ab82'
+revision = '14feb8d2247f'
 down_revision = 'b7bdf8195320'
 branch_labels = None
 depends_on = None
@@ -30,7 +30,7 @@ def upgrade() -> None:
     sa.Column('patrimonio', sa.Float(), nullable=True),
     sa.Column('total_investido', sa.Float(), nullable=True),
     sa.Column('user_id', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ),
+    sa.ForeignKeyConstraint(['user_id'], ['user.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_carteira_id'), 'carteira', ['id'], unique=False)
@@ -42,7 +42,7 @@ def upgrade() -> None:
     sa.Column('status_em_carteira', sa.Integer(), nullable=True),
     sa.Column('preco_atual', sa.Float(), nullable=True),
     sa.Column('carteira_id', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['carteira_id'], ['carteira.id'], ),
+    sa.ForeignKeyConstraint(['carteira_id'], ['carteira.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_ativos_carteira_id'), 'ativos_carteira', ['id'], unique=False)
@@ -54,7 +54,7 @@ def upgrade() -> None:
     sa.Column('quantidade_ativo', sa.Integer(), nullable=True),
     sa.Column('data_operacao', sa.DateTime(), nullable=True),
     sa.Column('carteira_id', sa.String(), nullable=True),
-    sa.ForeignKeyConstraint(['carteira_id'], ['carteira.id'], ),
+    sa.ForeignKeyConstraint(['carteira_id'], ['carteira.id'], ondelete='CASCADE'),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_index(op.f('ix_operacao_id'), 'operacao', ['id'], unique=False)

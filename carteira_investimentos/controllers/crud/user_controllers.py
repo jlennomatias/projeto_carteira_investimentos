@@ -27,7 +27,6 @@ class UserService:
                 nome=user.nome,
                 senha=create_password(user.senha)
             )
-            print(f"Criando o ususario: {user.nome}")
             try:
                 session.add(user)
                 await session.commit()
@@ -39,11 +38,16 @@ class UserService:
                     detail='user already exists'
                 )
 
-    async def select_user(**kwargs):
+    async def select_user():
         async with async_session() as session:
-            results = await session.execute(select(User))
-            return results.scalars().all()
-             
+            try:
+                results = await session.execute(select(User))
+                return results.scalars().all()
+            except ConnectionRefusedError as e:
+                raise HTTPException(
+                    status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+                    detail=f"Erro de conexão: {e.strerror}"
+                )
     
     async def select_user_id(id_user):
         async with async_session() as session:
