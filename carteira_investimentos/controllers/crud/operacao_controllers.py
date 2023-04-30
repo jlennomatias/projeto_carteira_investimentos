@@ -7,6 +7,7 @@ from sqlalchemy.exc import IntegrityError
 from carteira_investimentos.database.models.models import Operacao
 from carteira_investimentos.database.config import async_session
 from carteira_investimentos.schemas.schemas import OperacaoCreate
+from carteira_investimentos.controllers.utils.ativos_carteira import AtivosUtils
 
 class OperacaoService:
 
@@ -15,11 +16,17 @@ class OperacaoService:
             results = await session.execute(select(Operacao))
             results = results.scalars().all()
             return results
+    
+    async def select_operacao_carteira(id_carteira: str):
+        async with async_session() as session:
+            results = await session.execute(select(Operacao).where(Operacao.carteira_id == id_carteira))
+            results = results.scalars().all()
+            return results
 
-    async def create_operacao(operacao: OperacaoCreate):
+    async def create_operacao(operacao: OperacaoCreate, id_carteira: str):
         async with async_session() as session:
             operacao = Operacao(
-                carteira_id=operacao.carteira_id,
+                carteira_id=id_carteira,
                 id=str(uuid4()),
                 codigo_ativo=operacao.codigo_ativo,
                 tipo_operacao=operacao.tipo_operacao,
@@ -30,6 +37,9 @@ class OperacaoService:
             try:
                 session.add(operacao)
                 await session.commit()
+                ativos_carteira = AtivosUtils(id_carteira)
+                await ativos_carteira.cadastrar_ativos_carteira(operacao)
+                
                 return operacao
             except IntegrityError:
                 raise HTTPException(

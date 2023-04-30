@@ -5,18 +5,18 @@ from fastapi.security import OAuth2PasswordRequestForm
 from carteira_investimentos.controllers.depends import get_current_user
 from carteira_investimentos.controllers.crud.ativos_carteira_controllers import AtivosCarteiraService
 from carteira_investimentos.schemas.schemas import AtivosCarteiraCreate, AtivosCarteiraView
-
+from carteira_investimentos.shared.excepctions import NotFound
 
 router = APIRouter(tags=["AtivosCarteira"])
 
 
 
 @router.get('/ativos_carteira', response_model=List[AtivosCarteiraView])
-async def get_ativos_carteira():
+async def get_ativos_carteira(id_carteira: str):
     try:
-        ativos_carteira = await AtivosCarteiraService.select_ativos_carteira()
+        ativos_carteira = await AtivosCarteiraService.select_ativos_carteira(id_carteira=id_carteira)
         if not ativos_carteira:
-            raise HTTPException(status_code=404, detail="Item not found")
+            raise NotFound("ativo")
         return ativos_carteira
     except Exception as error:
         raise error
@@ -37,7 +37,7 @@ async def get_ativos_carteira_id(
     try:
         ativos_carteira = await AtivosCarteiraService.select_ativos_carteira_id(id_ativos_carteira=id_ativos_carteira)
         if not ativos_carteira:
-            raise HTTPException(status_code=404, detail="Item not found")
+            raise NotFound("ativo")
         return ativos_carteira
     except Exception as error:
         raise error
@@ -48,18 +48,18 @@ async def update_ativos_carteira(id_ativos_carteira: str, ativos_carteira: Ativo
     try:
         ativos_carteira = await AtivosCarteiraService.update_ativos_carteira_id(id_ativos_carteira=id_ativos_carteira, ativos_carteira=ativos_carteira)
         if not ativos_carteira:
-            raise HTTPException(status_code=404, detail="Item not found")
+            raise NotFound("ativo")
         return ativos_carteira
     except Exception as error:
         raise HTTPException(400, detail=str(error))
-    
+
 
 @router.delete('/ativos_carteira/{id_ativos_carteira}')
 async def delete_ativos_carteira_id(id_ativos_carteira: str):
     try:
         ativos_carteira = await AtivosCarteiraService.delete_ativos_carteira_id(id_ativo=id_ativos_carteira)
         if not ativos_carteira:
-            raise HTTPException(status_code=404, detail="Item not found")
+            raise NotFound("ativo")
         return ativos_carteira
     except Exception as error:
         raise HTTPException(400, detail=str(error))

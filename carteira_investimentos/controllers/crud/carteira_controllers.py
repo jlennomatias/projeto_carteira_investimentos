@@ -7,8 +7,10 @@ from sqlalchemy.exc import IntegrityError
 from carteira_investimentos.database.models.models import Carteira
 from carteira_investimentos.database.config import async_session
 from carteira_investimentos.schemas.schemas import CarteiraCreate, AtivosCarteiraCreate
-from carteira_investimentos.controllers.crud.ativos_carteira_controllers import AtivosCarteiraService
 from carteira_investimentos.controllers.utils.carteira_utils import CarteiraUtils
+from carteira_investimentos.controllers.crud.ativos_carteira_controllers import AtivosCarteiraService
+from carteira_investimentos.controllers.crud.operacao_controllers import OperacaoService
+
 
 
 class CarteiraService:
@@ -27,11 +29,9 @@ class CarteiraService:
                 total_investido=carteira.total_investido,
                 user_id=user_id
             )
-            print(f"Criando a carteira de id: {carteira_create.id}")
             try:
                 session.add(carteira_create)
                 await session.commit()
-                await AtivosCarteiraService.create_ativos_carteira(id_carteira=carteira_create.id, ativos_carteira=AtivosCarteiraCreate())
                 return carteira_create
             except IntegrityError:
                 raise HTTPException(
@@ -44,7 +44,7 @@ class CarteiraService:
             carteira_list = await session.execute(select(Carteira).where(Carteira.id == id_carteira))
             carteira_result = carteira_list.scalars().first()
             carteira_result.total_investido = await CarteiraUtils.calc_total_investido(carteira_result.total_investido)
-            print(dir(carteira_result))
+            
             return carteira_result
         
 

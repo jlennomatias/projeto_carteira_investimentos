@@ -5,6 +5,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from carteira_investimentos.controllers.depends import get_current_user
 from carteira_investimentos.controllers.crud.carteira_controllers import CarteiraService
 from carteira_investimentos.schemas.schemas import CarteiraView, CarteiraCreate
+from carteira_investimentos.shared.excepctions import NotFound
 
 router = APIRouter(tags=["Carteira"])
 
@@ -31,7 +32,7 @@ async def get_carteira_id(
     try:
         carteira = await CarteiraService.select_carteira_id(id_carteira=id_carteira)
         if not carteira:
-            raise HTTPException(status_code=404, detail="Item not found")
+            raise NotFound("ativo")
         return carteira
     except Exception as error:
         raise error

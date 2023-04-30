@@ -1,16 +1,24 @@
 import datetime
 from typing import Optional, List
-from pydantic import BaseModel
+from enum import Enum
+from pydantic import BaseModel, Field
 
+
+class EnumTipoOperacao(str, Enum):
+    COMPRA = 'COMPRA'
+    VENDA = 'VENDA'
 
 class OperacaoCreate(BaseModel):
     codigo_ativo: str
-    tipo_operacao: Optional[str]
+    tipo_operacao: EnumTipoOperacao = Field(
+        ...,
+        description='Tipo de operação, se foi realizado uma compra ou venda',
+        example='COMPRA',
+    )
     valor_operacao: Optional[float]
     quantidade_ativo: Optional[int]
     data_operacao: Optional[datetime.date]
 
-    carteira_id: str
 
     class Config:
         orm_mode = True
@@ -19,7 +27,11 @@ class OperacaoCreate(BaseModel):
 class OperacaoView(BaseModel):
     id: str
     codigo_ativo: str
-    tipo_operacao: Optional[str]
+    tipo_operacao: EnumTipoOperacao = Field(
+        ...,
+        description='Tipo de operação, se foi realizado uma compra ou venda',
+        example='COMPRA',
+    )
     valor_operacao: Optional[float]
     quantidade_ativo: Optional[int]
     data_operacao: Optional[datetime.date]
@@ -33,21 +45,21 @@ class OperacaoView(BaseModel):
 class AtivosCarteiraCreate(BaseModel):
     codigo_ativo: str = None
     preco_medio: float = 0.0
-    quantidade_ativo: int = 0
+    quantidade_ativos: int = 0
     preco_atual: float = 0.0
-    status_em_carteira: int = 0
+    status_em_carteira: bool = True
 
     class Config:
         orm_mode = True
 
 
 class AtivosCarteiraView(BaseModel):
-    id: str
+    id: Optional[str]
     codigo_ativo: str = None
     preco_medio: float = 0.0
-    quantidade_ativo: int = 0
+    quantidade_ativos: int = 0
     preco_atual: float = 0.0
-    status_em_carteira: int = 0
+    status_em_carteira: bool = True
 
     class Config:
         orm_mode = True

@@ -6,6 +6,7 @@ from carteira_investimentos.controllers.depends import get_current_user
 from carteira_investimentos.controllers.security.auth import verify_password, create_access_token
 from carteira_investimentos.controllers.crud.user_controllers import UserService
 from carteira_investimentos.schemas.schemas import UserView, UserCreate, UserCreateView
+from carteira_investimentos.shared.excepctions import NotFound
 
 router = APIRouter(tags=["User"])
 
@@ -52,7 +53,7 @@ async def get_user_id(
     try:
         usuario = await UserService.select_user_id(id_user=id_user)
         if not usuario:
-            raise HTTPException(status_code=404, detail="Item not found")
+            raise NotFound("ativo")
         return usuario
     except Exception as error:
         raise error

@@ -1,5 +1,5 @@
 import datetime
-from sqlalchemy import Column, String, Integer, Float, ForeignKey, DateTime
+from sqlalchemy import Column, String, Integer, Float, ForeignKey, DateTime, BOOLEAN
 from sqlalchemy.orm import relationship
 
 from carteira_investimentos.database.config import Base
@@ -33,9 +33,9 @@ class AtivosCarteira(Base):
     id = Column(String, primary_key=True, index=True)
     codigo_ativo = Column(String)
     preco_medio = Column(Float)
-    quantidade_ativo = Column(Integer)
-    status_em_carteira = Column(Integer)
+    quantidade_ativos = Column(Integer)
     preco_atual = Column(Float)
+    status_em_carteira = Column(BOOLEAN)
 
     carteira_id = Column(String, ForeignKey('carteira.id', ondelete="CASCADE"))
     

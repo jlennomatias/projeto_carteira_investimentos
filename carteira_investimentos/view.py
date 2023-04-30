@@ -8,7 +8,8 @@ from carteira_investimentos.routers import (
     assets_router,
     ativos_routers
 )
-
+from carteira_investimentos.shared.excepctions import NotFound
+from carteira_investimentos.shared.exceptions_handler import not_found_exception_handler
 
 app = FastAPI()
 
@@ -27,3 +28,4 @@ app.include_router(operacao_routers.router)
 app.include_router(assets_router.router)
 app.include_router(ativos_routers.router)
 
+app.add_exception_handler(NotFound, not_found_exception_handler)
